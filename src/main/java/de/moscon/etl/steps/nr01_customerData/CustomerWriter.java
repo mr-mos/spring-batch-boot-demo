@@ -1,9 +1,8 @@
 package de.moscon.etl.steps.nr01_customerData;
 
 import de.moscon.etl.beans.Customer;
+import de.moscon.etl.steps.StepUtils;
 import org.springframework.batch.item.file.FlatFileItemWriter;
-import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
-import org.springframework.batch.item.file.transform.DelimitedLineAggregator;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -16,21 +15,10 @@ public class CustomerWriter extends FlatFileItemWriter<Customer> {
 	public CustomerWriter() {
 		setResource(outputResource);
 		// setAppendAllowed(true);
-		setLineAggregator(createLineAggregator());
+		setLineAggregator(StepUtils.createLineAggregator(getFields()));
 		setHeaderCallback(writer -> {
 			writer.write(String.join(";",getFields()));
 		});
-	}
-
-
-
-	private DelimitedLineAggregator<Customer> createLineAggregator() {
-		BeanWrapperFieldExtractor<Customer> beanFieldMapper = new BeanWrapperFieldExtractor<>();
-		beanFieldMapper.setNames(getFields());
-		DelimitedLineAggregator<Customer> lineAggregator = new DelimitedLineAggregator<>();
-		lineAggregator.setDelimiter(";");
-		lineAggregator.setFieldExtractor(beanFieldMapper);
-		return lineAggregator;
 	}
 
 
