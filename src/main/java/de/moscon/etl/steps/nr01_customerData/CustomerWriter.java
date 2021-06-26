@@ -35,6 +35,6 @@ public class CustomerWriter extends FlatFileItemWriter<Customer> {
 
 
 	private String[] getFields() {
-		return new String[]{"id", "pseudonym", "gender", "birthday", "zipCode", "city", "registrationDate"};
+		return new String[]{"id", "pseudonym", "gender", "birthdayFormatted", "zipCode", "city", "registrationDateFormatted"};
 	}
 }

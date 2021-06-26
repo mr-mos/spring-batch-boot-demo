@@ -2,9 +2,12 @@ package de.moscon.etl.beans;
 
 import de.moscon.etl.beans.enums.Gender;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Customer {
+
+	private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
 
 	private Long id;
 	private String firstname;
@@ -17,6 +20,14 @@ public class Customer {
 
 	private Date registrationDate;
 
+
+	public String getBirthdayFormatted() {
+		return DATE_FORMAT.format(getBirthday());
+	}
+
+	public String getRegistrationDateFormatted() {
+		return DATE_FORMAT.format(getRegistrationDate());
+	}
 
 
 	public String getFirstname() {
@@ -82,4 +93,5 @@ public class Customer {
 	public void setCity(String city) {
 		this.city = city;
 	}
+
 }
