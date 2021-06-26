@@ -1,4 +1,4 @@
-package de.moscon.etl;
+package de.moscon;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -8,7 +8,6 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
@@ -19,7 +18,7 @@ public class SpringBatchApplication implements CommandLineRunner {
 	private JobLauncher jobLauncher;
 
 	@Autowired
-	private Job testJob;
+	private Job tennisShopJob;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBatchApplication.class, args);
@@ -31,6 +30,6 @@ public class SpringBatchApplication implements CommandLineRunner {
 		JobParameters jobParameters = new JobParametersBuilder()
 				.addLong("idTime", System.currentTimeMillis())
 				.toJobParameters();
-		jobLauncher.run(testJob, jobParameters);
+		jobLauncher.run(tennisShopJob, jobParameters);
 	}
 }

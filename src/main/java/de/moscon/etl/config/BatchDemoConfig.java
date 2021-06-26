@@ -1,11 +1,14 @@
 package de.moscon.etl.config;
 
+import de.moscon.etl.beans.Customer;
 import de.moscon.etl.listener.JobCompletionListener;
+import de.moscon.etl.steps.nr01_customerData.CustomerProcessor;
+import de.moscon.etl.steps.nr01_customerData.CustomerReader;
+import de.moscon.etl.steps.nr01_customerData.CustomerWriter;
 import de.moscon.etl.steps.testText.SimpleProcessor;
 import de.moscon.etl.steps.testText.SimpleReader;
 import de.moscon.etl.steps.testText.SimpleWriter;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -24,16 +27,49 @@ public class BatchDemoConfig {
 	private StepBuilderFactory stepBuilderFactory;
 
 
+	@Autowired
+	private CustomerProcessor customerProcessor;
+
+	@Autowired
+	private CustomerReader customerReader;
+
+	@Autowired
+	private CustomerWriter customerWriter;
+
+
+
 	@Bean
-	public Job testJob() {
+	public Job tennisShopJob() {
 		return jobBuilderFactory
-				.get("mosDemoJob")
-				.incrementer(new RunIdIncrementer()).listener(listener())
-				.flow(testStep())
+				.get("tennisShopJob")
+				.incrementer(new RunIdIncrementer()).listener(new JobCompletionListener())
+				.flow(customerDataStep())
 				.end()
 				.build();
 	}
 
+	private Step customerDataStep() {
+		return stepBuilderFactory
+				.get("customerDataStep")
+				.<Customer, Customer>chunk(10)
+				.reader(customerReader)
+				.processor(customerProcessor)
+				.writer(customerWriter)
+				.build();
+	}
+
+	////////////////////////////////////
+
+
+	@Bean
+	public Job testJob() {
+		return jobBuilderFactory
+				.get("mosDemoJob")
+				.incrementer(new RunIdIncrementer()).listener(new JobCompletionListener())
+				.flow(testStep())
+				.end()
+				.build();
+	}
 
 	private Step testStep() {
 		return stepBuilderFactory
@@ -42,11 +78,6 @@ public class BatchDemoConfig {
 				.reader(new SimpleReader()).processor(new SimpleProcessor())
 				.writer(new SimpleWriter())
 				.build();
-	}
-
-
-	private JobExecutionListener listener() {
-		return new JobCompletionListener();
 	}
 
 
