@@ -2,6 +2,7 @@ package de.moscon.etl.config;
 
 import de.moscon.etl.beans.Customer;
 import de.moscon.etl.beans.Product;
+import de.moscon.etl.beans.Sale;
 import de.moscon.etl.listener.JobCompletionListener;
 import de.moscon.etl.steps.nr01_customerData.CustomerProcessor;
 import de.moscon.etl.steps.nr01_customerData.CustomerReader;
@@ -9,6 +10,8 @@ import de.moscon.etl.steps.nr01_customerData.CustomerWriter;
 import de.moscon.etl.steps.nr02_productData.ProductProcessor;
 import de.moscon.etl.steps.nr02_productData.ProductReader;
 import de.moscon.etl.steps.nr02_productData.ProductWriter;
+import de.moscon.etl.steps.nr03_salesData.SalesReader;
+import de.moscon.etl.steps.nr03_salesData.SalesWriter;
 import de.moscon.etl.steps.testText.SimpleProcessor;
 import de.moscon.etl.steps.testText.SimpleReader;
 import de.moscon.etl.steps.testText.SimpleWriter;
@@ -45,6 +48,10 @@ public class BatchDemoConfig {
 	@Autowired
 	private ProductWriter productWriter;
 
+	@Autowired
+	private SalesReader salesReader;
+	@Autowired
+	private SalesWriter salesWriter;
 
 
 	@Bean
@@ -54,9 +61,11 @@ public class BatchDemoConfig {
 				.incrementer(new RunIdIncrementer()).listener(new JobCompletionListener())
 				.flow(customerDataStep())
 				.next(productDataStep())
+				.next(shopDataStep())
 				.end()
 				.build();
 	}
+
 
 	private Step customerDataStep() {
 		return stepBuilderFactory
@@ -75,6 +84,15 @@ public class BatchDemoConfig {
 				.reader(productReader)
 				.processor(productProcessor)
 				.writer(productWriter)
+				.build();
+	}
+
+	private Step shopDataStep() {
+		return stepBuilderFactory
+				.get("shopDataStep")
+				.<Sale, Sale>chunk(20)
+				.reader(salesReader)
+				.writer(salesWriter)
 				.build();
 	}
 

@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class ProductSimulator {
 
-	private List<Product> CACHE;
+	static private List<Product> CACHE;
 
 	private static List<String> TOP_20 = Arrays.asList(new String[]{
 			"Novak Djokovic",
@@ -45,7 +45,10 @@ public class ProductSimulator {
 	});
 
 
-	private List<Product> catchProductList() {
+	/**
+	 *   Generates 100 different products (fixed)
+	 */
+	public List<Product> catchProductList() {
 		if (CACHE != null) {
 			return CACHE;
 		}
@@ -70,7 +73,7 @@ public class ProductSimulator {
 		if (index >= products.size()) {
 			return null;
 		}
-		return catchProductList().get(index);
+		return products.get(index);
 	}
 
 
