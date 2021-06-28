@@ -39,7 +39,8 @@ public class BatchDemoConfig {
 		return stepBuilderFactory
 				.get("testStep1")
 				.<String, String>chunk(1)
-				.reader(new SimpleReader()).processor(new SimpleProcessor())
+				.reader(new SimpleReader())
+				.processor(new SimpleProcessor())
 				.writer(new SimpleWriter())
 				.build();
 	}

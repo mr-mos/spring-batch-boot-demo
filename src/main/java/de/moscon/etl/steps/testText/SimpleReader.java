@@ -23,7 +23,7 @@ public class SimpleReader implements ItemReader<String> {
 			return message;
 		}
 		System.out.println("-----> Finished all reading!");
-		count = 0;
+		count = 0;  // ????
 		return null;
 	}
 
