@@ -10,6 +10,7 @@ import de.moscon.etl.steps.nr01_customerData.CustomerWriter;
 import de.moscon.etl.steps.nr02_productData.ProductProcessor;
 import de.moscon.etl.steps.nr02_productData.ProductReader;
 import de.moscon.etl.steps.nr02_productData.ProductWriter;
+import de.moscon.etl.steps.nr03_salesData.SalesProcessor;
 import de.moscon.etl.steps.nr03_salesData.SalesReader;
 import de.moscon.etl.steps.nr03_salesData.SalesWriter;
 import de.moscon.etl.steps.testText.SimpleProcessor;
@@ -51,6 +52,8 @@ public class BatchDemoConfig {
 	@Autowired
 	private SalesReader salesReader;
 	@Autowired
+	private SalesProcessor salesProcessor;
+	@Autowired
 	private SalesWriter salesWriter;
 
 
@@ -59,9 +62,10 @@ public class BatchDemoConfig {
 		return jobBuilderFactory
 				.get("tennisShopJob")
 				.incrementer(new RunIdIncrementer()).listener(new JobCompletionListener())
-				.flow(customerDataStep())
+				.flow(shopDataStep())
+				.next(customerDataStep())
 				.next(productDataStep())
-				.next(shopDataStep())
+//				.next(shopDataStep())
 				.end()
 				.build();
 	}
@@ -70,7 +74,7 @@ public class BatchDemoConfig {
 	private Step customerDataStep() {
 		return stepBuilderFactory
 				.get("customerDataStep")
-				.<Customer, Customer>chunk(1)
+				.<Customer, Customer>chunk(20)
 				.reader(customerReader)
 				.processor(customerProcessor)
 				.writer(customerWriter)
@@ -92,6 +96,7 @@ public class BatchDemoConfig {
 				.get("shopDataStep")
 				.<Sale, Sale>chunk(20)
 				.reader(salesReader)
+				.processor(salesProcessor)
 				.writer(salesWriter)
 				.build();
 	}
