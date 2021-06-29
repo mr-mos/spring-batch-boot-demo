@@ -99,24 +99,5 @@ public class BatchDemoConfig {
 	////////////////////////////////////
 
 
-	@Bean
-	public Job testJob() {
-		return jobBuilderFactory
-				.get("mosDemoJob")
-				.incrementer(new RunIdIncrementer()).listener(new JobCompletionListener())
-				.flow(testStep())
-				.end()
-				.build();
-	}
-
-	private Step testStep() {
-		return stepBuilderFactory
-				.get("testStep1")
-				.<String, String>chunk(1)
-				.reader(new SimpleReader()).processor(new SimpleProcessor())
-				.writer(new SimpleWriter())
-				.build();
-	}
-
 
 }
