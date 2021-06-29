@@ -2,6 +2,8 @@ package de.moscon.extern_systems;
 
 import de.moscon.etl.beans.Product;
 import de.moscon.etl.beans.Sale;
+import de.moscon.etl.cache.CustomerCache;
+import de.moscon.etl.steps.nr01_customerData.CustomerReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +19,13 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ShopSimulator {
 
 	@Autowired
+	CustomerCache customerCache;
+
+	@Autowired
 	ProductSimulator productSimulator;
+
+	@Autowired
+	CustomerReader customerReader;
 
 	static private List<Sale> CACHE;
 
@@ -48,10 +56,11 @@ public class ShopSimulator {
 			sale.setId(Long.valueOf(i + 1));
 			sale.setProductId(Long.valueOf(random.nextInt(100) + 1));
 			sale.setCustomerId(Long.valueOf(random.nextInt(1000) + 1));
+			// custId exists
 			sale.setCount(random.nextInt(12) + 1);
 			double priceSum = sale.getCount() * products.get((int) (sale.getProductId() - 1)).getNetPrice();
 			sale.setNetPriceSum(priceSum);
-			sale.setTime(randomDate());
+			sale.setTime(randomDate(customerCache.getRegistrationDate(sale.getCustomerId())));
 			sales.add(sale);
 		}
 		CACHE = sales;
@@ -59,13 +68,9 @@ public class ShopSimulator {
 	}
 
 
-	private Date randomDate() {
+	private Date randomDate(Date registrationDate) {
 		Date startInclusive;
-		try {
-			startInclusive = DATE_FORMAT.parse("01.01.2019");
-		} catch (ParseException e) {
-			throw new IllegalStateException("Internal unexpected error: " + e);
-		}
+			startInclusive = registrationDate;
 		Date endExclusive = new Date();
 		long startMillis = startInclusive.getTime();
 		long endMillis = endExclusive.getTime();
