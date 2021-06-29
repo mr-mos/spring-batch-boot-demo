@@ -9,7 +9,7 @@ public class CustomerProcessor implements ItemProcessor<Customer, Customer> {
 
 	@Override
 	public Customer process(Customer item) throws Exception {
-		item.setPseudonym("customer_"+item.getFirstname().toLowerCase());
+		item.setPseudonym("customer_"+item.getId());
 		item.setFirstname(null);
 		return item;
 	}
