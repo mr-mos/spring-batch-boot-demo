@@ -1,6 +1,7 @@
 package de.moscon.etl.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
@@ -26,6 +27,23 @@ public class SpringConfig {
 		dataSource.setDriverClassName("org.sqlite.JDBC");
 		dataSource.setUrl("jdbc:sqlite:repository.sqlite");
 		return dataSource;
+	}
+
+	@Bean(name = "mySql")
+	public DataSource mySqlDataSource() {
+//		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+//		dataSource.setUrl("jdbc:mysql://localhost:3306/tennisshop?serverTimezone=UTC");
+//		dataSource.setUsername("root");
+//		dataSource.setPassword("mpk72");
+//		return dataSource;
+
+		return DataSourceBuilder.create()
+				.url("jdbc:mysql://localhost:3306/tennisshop?serverTimezone=UTC")
+				.driverClassName("com.mysql.cj.jdbc.Driver")
+				.username("root")
+				.password("mpk72")
+				.build();
 	}
 
 

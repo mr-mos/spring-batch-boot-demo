@@ -7,11 +7,14 @@ import de.moscon.etl.listener.JobCompletionListener;
 import de.moscon.etl.steps.nr01_customerData.CustomerProcessor;
 import de.moscon.etl.steps.nr01_customerData.CustomerReader;
 import de.moscon.etl.steps.nr01_customerData.CustomerWriter;
+import de.moscon.etl.steps.nr01_customerData.CustomerWriterDB;
 import de.moscon.etl.steps.nr02_productData.ProductProcessor;
 import de.moscon.etl.steps.nr02_productData.ProductReader;
 import de.moscon.etl.steps.nr02_productData.ProductWriter;
+import de.moscon.etl.steps.nr02_productData.ProductWriterDB;
 import de.moscon.etl.steps.nr03_salesData.SalesReader;
 import de.moscon.etl.steps.nr03_salesData.SalesWriter;
+import de.moscon.etl.steps.nr03_salesData.SalesWriterDB;
 import de.moscon.etl.steps.testText.SimpleProcessor;
 import de.moscon.etl.steps.testText.SimpleReader;
 import de.moscon.etl.steps.testText.SimpleWriter;
@@ -40,6 +43,8 @@ public class BatchDemoConfig {
 	private CustomerReader customerReader;
 	@Autowired
 	private CustomerWriter customerWriter;
+	@Autowired
+	private CustomerWriterDB customerWriterDB;
 
 	@Autowired
 	private ProductProcessor productProcessor;
@@ -47,11 +52,15 @@ public class BatchDemoConfig {
 	private ProductReader productReader;
 	@Autowired
 	private ProductWriter productWriter;
+	@Autowired
+	private ProductWriterDB productWriterDB;
 
 	@Autowired
 	private SalesReader salesReader;
 	@Autowired
 	private SalesWriter salesWriter;
+	@Autowired
+	private SalesWriterDB salesWriterDB;
 
 
 	@Bean
@@ -73,7 +82,7 @@ public class BatchDemoConfig {
 				.<Customer, Customer>chunk(10)
 				.reader(customerReader)
 				.processor(customerProcessor)
-				.writer(customerWriter)
+				.writer(customerWriterDB)
 				.build();
 	}
 
@@ -83,7 +92,7 @@ public class BatchDemoConfig {
 				.<Product, Product>chunk(5)
 				.reader(productReader)
 				.processor(productProcessor)
-				.writer(productWriter)
+				.writer(productWriterDB)
 				.build();
 	}
 
@@ -92,7 +101,7 @@ public class BatchDemoConfig {
 				.get("shopDataStep")
 				.<Sale, Sale>chunk(20)
 				.reader(salesReader)
-				.writer(salesWriter)
+				.writer(salesWriterDB)
 				.build();
 	}
 
