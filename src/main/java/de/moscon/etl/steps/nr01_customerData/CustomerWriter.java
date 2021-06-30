@@ -6,11 +6,13 @@ import de.moscon.etl.steps.StepUtils;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 
 import org.springframework.batch.item.file.FlatFileItemWriter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.stereotype.Component;
 import org.springframework.core.io.Resource;
 
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -35,20 +37,9 @@ public class CustomerWriter extends JdbcBatchItemWriter<Customer> {
 // }
 //
 
-
-	@Override
-	public void write(List<? extends Customer> items) throws Exception {
-		namedParameterJdbcTemplate.getJdbcOperations().batchUpdate("lab806", new BatchPreparedStatementSetter() {
-			@Override
-			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				// set values on your sql
-			}
-
-			@Override
-			public int getBatchSize() {
-				return items.size(); // or any other value you want
-			}
-		});
+	public CustomerWriter(@Qualifier("dataSourceMySql") DataSource dataSourceMySql){
+		setDataSource(dataSourceMySql);
+		setSql("INSERT INTO customer (id, pseudonym, gender, birthday_formatted, zip_code, city, registration_date_formatted) VALUES (?, ?, ?, ?, ?, ?, ?)");
 	}
 
 

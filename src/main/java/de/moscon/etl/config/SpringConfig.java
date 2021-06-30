@@ -26,6 +26,16 @@ public class SpringConfig {
 		return dataSource;
 	}
 
+	@Bean
+	public DataSource dataSourceMySql() {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+		dataSource.setUrl("jdbc:mysql://localhost:3306/lab806");
+		dataSource.setUsername("root");
+		dataSource.setPassword("#t2rfortheMax");
+		return dataSource;
+	}
+
 
 	@Bean
 	public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
