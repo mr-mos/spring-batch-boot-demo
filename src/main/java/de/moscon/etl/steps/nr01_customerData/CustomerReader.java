@@ -36,7 +36,7 @@ public class CustomerReader extends FlatFileItemReader<Customer> {
 			customer.setZipCode(fieldSet.readString(4));
 			customer.setCity(fieldSet.readString(5));
 			customer.setRegistrationDate(fieldSet.readDate(8,"dd.MM.yyyy"));
-			customer.setGender(fieldSet.readString(9).equals("m")? Gender.MALE: Gender.FEMALE);
+			customer.setGender(fieldSet.readString(9).equals("m")? Gender.MALE: (fieldSet.readString(9).equals("w")? Gender.FEMALE: Gender.DIVERS));
 			return customer;
 		});
 		return lineMapper;
