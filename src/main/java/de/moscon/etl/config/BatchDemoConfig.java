@@ -7,22 +7,29 @@ import de.moscon.etl.listener.JobCompletionListener;
 import de.moscon.etl.steps.nr01_customerData.CustomerProcessor;
 import de.moscon.etl.steps.nr01_customerData.CustomerReader;
 import de.moscon.etl.steps.nr01_customerData.CustomerWriter;
+import de.moscon.etl.steps.nr01_customerData.CustomerWriterDB;
 import de.moscon.etl.steps.nr02_productData.ProductProcessor;
 import de.moscon.etl.steps.nr02_productData.ProductReader;
 import de.moscon.etl.steps.nr02_productData.ProductWriter;
+import de.moscon.etl.steps.nr02_productData.ProductWriterDB;
 import de.moscon.etl.steps.nr03_salesData.SalesReader;
 import de.moscon.etl.steps.nr03_salesData.SalesWriter;
+import de.moscon.etl.steps.nr03_salesData.SalesWriterDB;
 import de.moscon.etl.steps.testText.SimpleProcessor;
 import de.moscon.etl.steps.testText.SimpleReader;
 import de.moscon.etl.steps.testText.SimpleWriter;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class BatchDemoConfig {
@@ -40,6 +47,8 @@ public class BatchDemoConfig {
 	private CustomerReader customerReader;
 	@Autowired
 	private CustomerWriter customerWriter;
+	@Autowired
+	private CustomerWriterDB customerWriterDB;
 
 	@Autowired
 	private ProductProcessor productProcessor;
@@ -47,18 +56,23 @@ public class BatchDemoConfig {
 	private ProductReader productReader;
 	@Autowired
 	private ProductWriter productWriter;
+	@Autowired
+	private ProductWriterDB productWriterDB;
 
 	@Autowired
 	private SalesReader salesReader;
 	@Autowired
 	private SalesWriter salesWriter;
+	@Autowired
+	private SalesWriterDB salesWriterDB;
 
 
 	@Bean
 	public Job tennisShopJob() {
 		return jobBuilderFactory
 				.get("tennisShopJob")
-				.incrementer(new RunIdIncrementer()).listener(new JobCompletionListener())
+				.incrementer(new RunIdIncrementer())
+				.listener(new JobCompletionListener())
 				.flow(customerDataStep())
 				.next(productDataStep())
 				.next(shopDataStep())
@@ -74,6 +88,7 @@ public class BatchDemoConfig {
 				.reader(customerReader)
 				.processor(customerProcessor)
 				.writer(customerWriter)
+				.writer(customerWriterDB)
 				.build();
 	}
 
@@ -84,6 +99,7 @@ public class BatchDemoConfig {
 				.reader(productReader)
 				.processor(productProcessor)
 				.writer(productWriter)
+				.writer(productWriterDB)
 				.build();
 	}
 
@@ -93,7 +109,13 @@ public class BatchDemoConfig {
 				.<Sale, Sale>chunk(20)
 				.reader(salesReader)
 				.writer(salesWriter)
+				.writer(salesWriterDB)
 				.build();
+	}
+
+	@Bean
+	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+		return new JdbcTemplate(dataSource);
 	}
 
 	////////////////////////////////////
@@ -117,6 +139,8 @@ public class BatchDemoConfig {
 				.writer(new SimpleWriter())
 				.build();
 	}
+
+
 
 
 }

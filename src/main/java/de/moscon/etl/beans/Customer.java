@@ -5,6 +5,7 @@ import de.moscon.etl.beans.enums.Gender;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+
 public class Customer {
 
 	private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
@@ -12,6 +13,7 @@ public class Customer {
 	private Long id;
 	private String firstname;
 	private String pseudonym;
+
 	private Gender gender;
 	private Date birthday;
 
@@ -62,6 +64,10 @@ public class Customer {
 		this.pseudonym = pseudonym;
 	}
 
+	public String getGenderFormatted() {
+		return gender.name();
+	}
+
 	public Gender getGender() {
 		return gender;
 	}
@@ -69,6 +75,8 @@ public class Customer {
 	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
+
+
 
 	public Date getBirthday() {
 		return birthday;
