@@ -14,8 +14,6 @@ import javax.sql.DataSource;
 @Component
 public class SalesWriterDB extends JdbcBatchItemWriter<Sale> {
 
-	private Resource outputResource = new FileSystemResource("data/output/produkte_tennisshop.csv");
-
 	public SalesWriterDB(@Qualifier("mySql") DataSource dataSource) {
 		setDataSource(dataSource);
 		setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
@@ -23,5 +21,4 @@ public class SalesWriterDB extends JdbcBatchItemWriter<Sale> {
 				"(id,	productId, customerId,	count, netPriceSumFormatted, timeFormatted)" +
 				"VALUES (:id, :productId, :customerId, :count, :netPriceSum, :time);");
 	}
-
 }
