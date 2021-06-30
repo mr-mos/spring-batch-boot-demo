@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,6 +73,24 @@ public class ShopSimulator {
 		long endMillis = endExclusive.getTime();
 		long randomMillisSinceEpoch = ThreadLocalRandom.current().nextLong(startMillis, endMillis);
 		return new Date(randomMillisSinceEpoch);
+	}
+
+	public Date getFirstBuy(long id) {
+		Date firstBuy;
+		try {
+			firstBuy = DATE_FORMAT.parse("01.01.2099");
+		} catch (ParseException e) {
+			throw new IllegalStateException("Internal unexpected error: " + e);
+		}
+		List<Sale> allSales = getSales();
+		for (Sale selected : allSales) {
+			if (selected.getCustomerId() == id) {
+				if (selected.getTime().before(firstBuy)) {
+					firstBuy = selected.getTime();
+				}
+			}
+		}
+		return firstBuy;
 	}
 
 }
