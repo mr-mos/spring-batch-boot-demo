@@ -1,4 +1,4 @@
-package de.moscon.etl.steps;
+package de.moscon.etl.utils;
 
 import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
 import org.springframework.batch.item.file.transform.DelimitedLineAggregator;
