@@ -2,8 +2,10 @@ package de.moscon.etl.steps.nr01_customerData;
 
 import de.moscon.etl.beans.Customer;
 
+import de.moscon.etl.steps.StepUtils;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 
+import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.stereotype.Component;
@@ -16,8 +18,8 @@ import java.util.List;
 @Component
 public class CustomerWriter extends JdbcBatchItemWriter<Customer> {
 
-	private Resource outputResource = new FileSystemResource("data/output/kunden_tennisshop.csv");
-
+//	private Resource outputResource = new FileSystemResource("data/output/kunden_tennisshop.csv");
+//
 // public CustomerWriter() {
 //    setResource(outputResource);
 //    // setAppendAllowed(true);
@@ -31,6 +33,8 @@ public class CustomerWriter extends JdbcBatchItemWriter<Customer> {
 // private String[] getFields() {
 //    return new String[]{"id", "pseudonym", "gender", "birthdayFormatted", "zipCode", "city", "registrationDateFormatted"};
 // }
+//
+
 
 	@Override
 	public void write(List<? extends Customer> items) throws Exception {
