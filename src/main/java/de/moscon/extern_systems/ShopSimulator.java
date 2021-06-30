@@ -7,10 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Component
@@ -20,6 +17,8 @@ public class ShopSimulator {
 	ProductSimulator productSimulator;
 
 	static private List<Sale> CACHE;
+
+	static private Map<Long, Date> CACHE_CUSTOMER_FIRST_DATE;
 
 	private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
 
@@ -33,17 +32,32 @@ public class ShopSimulator {
 	}
 
 
-	/**
-	     Generates 2.000 sales transactions randomly
-	 */
-	private List<Sale> getSales() {
-		if (CACHE != null) {
-			return CACHE;
+	public Date getMinSaleDate(Long customerId) {
+		if (CACHE_CUSTOMER_FIRST_DATE == null) {
+			generateDataAndInitCaches();
 		}
+		return CACHE_CUSTOMER_FIRST_DATE.get(customerId);
+	}
+
+
+	private List<Sale> getSales() {
+		if (CACHE == null) {
+			generateDataAndInitCaches();
+		}
+		return CACHE;
+	}
+
+
+	/**
+	 * Generates 2.000 sales transactions randomly
+	 */
+	private void generateDataAndInitCaches() {
+		Map<Long,Date> firstDates = new HashMap<>();
 		List<Product> products = productSimulator.catchProductList();
 		List<Sale> sales = new ArrayList<Sale>();
 		Random random = ThreadLocalRandom.current();
 		for (int i = 0; i < 2000; i++) {
+			// 1. create a Sale object
 			Sale sale = new Sale();
 			sale.setId(Long.valueOf(i + 1));
 			sale.setProductId(Long.valueOf(random.nextInt(100) + 1));
@@ -53,9 +67,14 @@ public class ShopSimulator {
 			sale.setNetPriceSum(priceSum);
 			sale.setTime(randomDate());
 			sales.add(sale);
+            // 2. remember min sale date
+			Date curDate = firstDates.get(sale.getCustomerId());
+			if (curDate == null || sale.getTime().before(curDate)) {
+				firstDates.put(sale.getCustomerId(),sale.getTime());
+			}
 		}
+		CACHE_CUSTOMER_FIRST_DATE = firstDates;
 		CACHE = sales;
-		return sales;
 	}
 
 
