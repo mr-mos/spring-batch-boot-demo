@@ -30,9 +30,9 @@ public class SpringConfig {
 	public DataSource dataSourceMySql() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://localhost:3306/tennisshop");
+		dataSource.setUrl("jdbc:mysql://localhost:3306/lab806");
 		dataSource.setUsername("root");
-		dataSource.setPassword("online00");
+		dataSource.setPassword("#t2rfortheMax");
 		return dataSource;
 	}
 
