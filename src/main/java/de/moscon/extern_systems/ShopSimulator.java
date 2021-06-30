@@ -7,10 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Component
@@ -20,6 +17,8 @@ public class ShopSimulator {
 	ProductSimulator productSimulator;
 
 	static private List<Sale> CACHE;
+
+	static private Map<Long,Date> data;
 
 	private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
 
@@ -31,6 +30,33 @@ public class ShopSimulator {
 		}
 		return sales.get(index);
 	}
+	public void generateMinSaleDates() {
+		List<Sale> sales = getSales();
+		Sale testSale;
+		Date testDate;
+		Long testKey;
+		Map<Long,Date> map = new HashMap<>();
+		for (int i = 0; i < 2000; i++) {
+			testSale= sales.get(i);
+			testKey=testSale.getCustomerId();
+			if(!map.containsKey(testKey)){
+				map.put(testKey, testSale.getTime());
+			} else {
+				testDate = map.get(testKey);
+				if(testSale.getTime().before(testDate)){
+					map.put(testKey,testSale.getTime());
+				}
+			}
+		}
+		this.data=map;
+	}
+
+	public Date getMinSaleDate(Long customerKey){
+		return this.data.get(customerKey);
+	}
+
+
+
 
 
 	/**
