@@ -70,7 +70,7 @@ public class BatchDemoConfig {
 	private Step customerDataStep() {
 		return stepBuilderFactory
 				.get("customerDataStep")
-				.<Customer, Customer>chunk(1)
+				.<Customer, Customer>chunk(10)
 				.reader(customerReader)
 				.processor(customerProcessor)
 				.writer(customerWriter)

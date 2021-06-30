@@ -16,9 +16,11 @@ public class CustomerProcessor implements ItemProcessor<Customer, Customer> {
 
 	@Override
 	public Customer process(Customer item) throws Exception {
+
 		shopSimulator.generateMinSaleDates();
 		Date minDate = shopSimulator.getMinSaleDate(item.getId());
-		item.setPseudonym("customer_"+item.getFirstname().toLowerCase());
+		item.setPseudonym("customer_"+item.getId());
+
 		item.setFirstname(null);
 		if(minDate!=null){
 			if(!item.getRegistrationDate().before(minDate)){
