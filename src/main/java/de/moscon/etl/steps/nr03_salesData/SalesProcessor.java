@@ -21,10 +21,8 @@ public class SalesProcessor implements ItemProcessor<Sale, Sale> {
 		Date minOrderDate = saleCache.getMinOrderDate(item.getCustomerId());
 		if (minOrderDate == null) {
 			saleCache.addToSaleCache(item.getCustomerId(), item.getTime());
-		} else {
-			if (item.getTime().before(minOrderDate)) {
+		} else if (item.getTime().before(minOrderDate)) {
 				saleCache.addToSaleCache(item.getCustomerId(), item.getTime());
-			}
 		}
 		return item;
 	}
