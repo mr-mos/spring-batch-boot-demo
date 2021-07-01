@@ -3,6 +3,7 @@ package de.moscon.etl.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
@@ -19,8 +20,15 @@ public class SpringConfig {
 	@Value("org/springframework/batch/core/schema-sqlite.sql")
 	private Resource dataReopsitorySchema;
 
+//	@Value("org/springframework/batch/core/schema-drop-mysql.sql")
+//	private Resource dropReopsitoryTablesMySql;
+//
+//	@Value("org/springframework/batch/core/schema-mysql.sql")
+//	private Resource dataReopsitorySchemaMySql;
+
 
 	@Bean
+	@Primary
 	public DataSource dataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName("org.sqlite.JDBC");
@@ -28,6 +36,15 @@ public class SpringConfig {
 		return dataSource;
 	}
 
+	@Bean
+	public DataSource dataSourceMySql() {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+		dataSource.setUrl("jdbc:mysql://localhost:3306/tennis_shop?serverTimezone=UTC");
+		dataSource.setUsername("root");
+		dataSource.setPassword("XP3DxecMC!");
+		return dataSource;
+	}
 
 	@Bean
 	public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {

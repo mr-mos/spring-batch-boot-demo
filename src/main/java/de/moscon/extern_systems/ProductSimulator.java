@@ -37,7 +37,7 @@ public class ProductSimulator {
 
 
 	private static List<String> PRODUCTS = Arrays.asList(new String[]{
-			"Tennischläger",
+			"Tennischlaeger",
 			"Schuhe",
 			"Tasche",
 			"T-Shirt",
