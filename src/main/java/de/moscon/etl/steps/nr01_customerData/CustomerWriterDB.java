@@ -17,7 +17,16 @@ public class CustomerWriterDB extends JdbcBatchItemWriter<Customer> {
         System.out.println("datasource: " + dataSource);
         setDataSource(dataSource);
         setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
-        setSql("INSERT INTO kunden_tennisshop (id, pseudonym, gender, birthdayFormatted, zipCode, city, registrationDateFormatted) VALUES (:id, :pseudonym, :genderFormatted, :birthday, :zipCode, :city, :registrationDate);");
+        setSql("INSERT INTO kunden_tennisshop" +
+                "(customerId, pseudonym, gender, birthdayFormatted, zipCode, city, registrationDateFormatted)" + "" +
+                "VALUES (:id, :pseudonym, :genderFormatted, :birthday, :zipCode, :city, :registrationDate) " +
+                "ON DUPLICATE KEY UPDATE " +
+                "pseudonym=values(pseudonym)," +
+                "gender=values(gender)," +
+                "birthdayFormatted=values(birthdayFormatted),"+
+                "zipCode=values(zipCode),"+
+                "city=values(city),"+
+                "registrationDateFormatted=values(registrationDateFormatted);");
     }
 
 

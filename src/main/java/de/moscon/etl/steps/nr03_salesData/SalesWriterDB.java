@@ -19,6 +19,12 @@ public class SalesWriterDB extends JdbcBatchItemWriter<Sale> {
 		setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
 		setSql("INSERT INTO tennisshop.sales_tennisshop" +
 				"(id,	productId, customerId,	count, netPriceSumFormatted, timeFormatted)" +
-				"VALUES (:id, :productId, :customerId, :count, :netPriceSum, :time);");
+				"VALUES (:id, :productId, :customerId, :count, :netPriceSum, :time) " +
+				"ON DUPLICATE KEY UPDATE " +
+				"productId=values(productId)," +
+				"customerId=values(customerId)," +
+				"count=values(count),"+
+				"netPriceSumFormatted=values(netPriceSumFormatted)," +
+				"timeFormatted=values(timeFormatted);");
 	}
 }
