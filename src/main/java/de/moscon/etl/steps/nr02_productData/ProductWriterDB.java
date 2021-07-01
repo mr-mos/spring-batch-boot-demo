@@ -17,7 +17,16 @@ public class ProductWriterDB extends JdbcBatchItemWriter<Product> {
         setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
 
 
-        setSql("INSERT INTO produkte_tennisshop (productId, displayName, netPriceFormatted, playerBrand) VALUES (:id, :displayName, :netPrice, :playerBrand);");
+        setSql("INSERT INTO produkte_tennisshop" +
+                "(productId, displayName, netPriceFormatted, category, playerBrand)" +
+                "VALUES (:id, :displayName,	:netPrice, :category, :playerBrand) " +
+                "ON DUPLICATE KEY UPDATE " +
+                "displayName=values(displayName)," +
+                "netPriceFormatted=values(netPriceFormatted)," +
+                "category=values(category),"+
+                "playerBrand=values(playerBrand);");
+
+//        (productId, displayName, netPriceFormatted, playerBrand) VALUES (:id, :displayName, :netPrice, :playerBrand);");
     }
 
 }
