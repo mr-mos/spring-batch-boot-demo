@@ -66,6 +66,10 @@ public class Customer {
 		return gender;
 	}
 
+	public String getGenderFormatted() {
+		return gender.name();
+	}
+
 	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
